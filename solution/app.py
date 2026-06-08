@@ -151,12 +151,6 @@ def alert_evaluate():
     return jsonify({"result": str(result)})
 
 
-# CORRIGÉ #6 — random.randint → secrets.token_hex
-@app.route("/api/v1/token/generate")
-def token_generate():
-    token = secrets.token_hex(32)
-    return jsonify({"token": token, "expires_in": 3600})
-
 
 if __name__ == "__main__":
     init_db()

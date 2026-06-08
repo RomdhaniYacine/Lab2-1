@@ -1,23 +1,13 @@
-name: "DevSecOps — SAST Semgrep"
+name: "SAST — Semgrep"
 
 on: [push, pull_request]
 
 jobs:
-
   semgrep:
     name: "Semgrep — Analyse statique"
     runs-on: ubuntu-latest
     container:
       image: semgrep/semgrep
-    permissions:
-      security-events: write
-      contents: read
     steps:
       - uses: actions/checkout@v4
-
-      - name: Semgrep scan + export SARIF
-        run: semgrep --config .semgrep.yml --config p/python --sarif > semgrep.sarif || true
-
-      - uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep.sarif
+      - run: semgrep --config p/python --config p/security-audit --error app.py

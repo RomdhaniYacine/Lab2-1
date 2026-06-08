@@ -1,8 +1,6 @@
 import hashlib
 import os
 import pickle
-import random
-import secrets
 import sqlite3
 import subprocess
 from flask import Flask, request, jsonify
@@ -12,7 +10,7 @@ app = Flask(__name__)
 # ============================================================
 # VULNÉRABILITÉS SAST — Lab DevSecOps Free Mobile
 # Objectif : détecter ces vulnérabilités avec Semgrep
-# Outils    : semgrep --config p/python --config .semgrep.yml
+# Outils    : semgrep --config p/python
 # ============================================================
 
 DB_PATH = "netops.db"
@@ -111,7 +109,7 @@ def equipment_ping():
 
 
 # VULN #3 — Weak Cryptography (MD5 pour authentification)
-# Semgrep : règle custom freemobile-no-md5 dans .semgrep.yml
+# Semgrep : python.cryptography.security.md5-used
 @app.route("/api/v1/auth/login", methods=["POST"])
 def auth_login():
     data = request.get_json() or {}
@@ -142,7 +140,7 @@ def config_restore():
 
 
 # VULN #5 — Code Injection (eval)
-# Semgrep : règle custom freemobile-no-eval dans .semgrep.yml
+# Semgrep : python.lang.security.audit.eval.use-of-eval
 @app.route("/api/v1/alerts/evaluate", methods=["POST"])
 def alert_evaluate():
     data = request.get_json() or {}
@@ -152,15 +150,6 @@ def alert_evaluate():
     result = eval(rule)
     return jsonify({"result": str(result)})
 
-
-# VULN #6 — Insecure Random (token de session)
-# Semgrep : python.lang.security.audit.insecure-random-usage.use-of-random
-@app.route("/api/v1/token/generate")
-def token_generate():
-    # random.randint() n'est pas cryptographiquement sûr
-    # Prévisible → attaque par brute force ou prédiction de token
-    token = str(random.randint(100000, 999999))
-    return jsonify({"token": token, "expires_in": 3600})
 
 
 if __name__ == "__main__":

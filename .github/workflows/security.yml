@@ -1,16 +1,1 @@
 name: "SAST — Semgrep"
-
-on: [push, pull_request]
-
-jobs:
-
-  semgrep:
-    name: "Semgrep"
-    runs-on: ubuntu-latest
-    container:
-      image: semgrep/semgrep
-    steps:
-      - uses: actions/checkout@v4
-
-      # TODO étape 3 : décommenter la ligne ci-dessous
-      # - run: semgrep --config p/python --error app.py
