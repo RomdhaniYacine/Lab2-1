@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+netops.db
+.venv/
+.env
+semgrep-report.sarif
+semgrep.sarif

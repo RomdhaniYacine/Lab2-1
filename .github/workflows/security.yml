@@ -1,0 +1,23 @@
+name: "DevSecOps — SAST Semgrep"
+
+on: [push, pull_request]
+
+jobs:
+
+  semgrep:
+    name: "Semgrep — Analyse statique"
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO étape 6 : décommenter les 4 lignes ci-dessous
+      # - name: Semgrep scan + export SARIF
+      #   run: semgrep --config .semgrep.yml --config p/python --sarif > semgrep.sarif || true
+      # - uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: semgrep.sarif
